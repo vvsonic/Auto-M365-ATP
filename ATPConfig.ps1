@@ -30,27 +30,27 @@ Company : Umbrella IT Solutions
 
         # Domains and Senders to whitelist by default from ALL POLICIES. This includes Phishing, Anti-Spam, Etc.. Comma seperated.
 
-            $ExcludedDomains = "intuit.com", "Umbrellaitgroup.com" | Select-Object -Unique # QB Online has been getting popped for phishing lately. Highly reccomended to include Intuit.
+        $ExcludedDomains = "intuit.com", "vvsonic.com", "soniccloud.org", "sonicvoip.com" | Select-Object -Unique # QB Online has been getting popped for phishing lately. Highly reccomended to include Intuit.
 
-            $ExcludedSenders = "connect@e.connect.intuit.com", "info@umbrellaitgroup.com", "security@umbrellaitgroup.com", "advanced-threat-protection@protection.outlook.com" | Select-Object -Unique
+        $ExcludedSenders = "connect@e.connect.intuit.com", "help@vvsonic.com", "support@vvsonic.com", "mailalerts@vvsonic.com", "advanced-threat-protection@protection.outlook.com" | Select-Object -Unique
 
         # File types to be blacklisted in the Anti-Malware Policy. Additional filetypes here to blacklist seperated by comma with quotes
 
-            $NewFileTypeBlacklist = "ade", "adp", "app", "application", "arx", "avb", "bas", "bat", "chm", "class", "cmd", "cnv", "com", "cpl", "crt", "dll", "docm", "drv", "exe", "fxp", "gadget", "gms", "hlp", "hta", "inf", "ink", "ins", "isp", "jar", "job", "js", "jse", "lnk", "mda", "mdb", "mde", "mdt", "mdw", "mdz", "mpd", "msc", "msi", "msp", "mst", "nlm", "ocx", "ops", "ovl", "paf", "pcd", "pif", "prf", "prg", "ps1", "psd1", "psm", "psm1", "reg", "scf", "scr", "sct", "shb", "shs", "sys", "tlb", "tsp", "url", "vb", "vbe", "vbs", "vdl", "vxd", "wbt", "wiz", "wsc", "wsf", "wsh" | Select-Object -Unique
+        $NewFileTypeBlacklist = "ade", "adp", "app", "application", "arx", "avb", "bas", "bat", "chm", "class", "cmd", "cnv", "com", "cpl", "crt", "dll", "docm", "drv", "exe", "fxp", "gadget", "gms", "hlp", "hta", "inf", "ink", "ins", "isp", "jar", "job", "js", "jse", "lnk", "mda", "mdb", "mde", "mdt", "mdw", "mdz", "mpd", "msc", "msi", "msp", "mst", "nlm", "ocx", "ops", "ovl", "paf", "pcd", "pif", "prf", "prg", "ps1", "psd1", "psm", "psm1", "reg", "scf", "scr", "sct", "shb", "shs", "sys", "tlb", "tsp", "url", "vb", "vbe", "vbs", "vdl", "vxd", "wbt", "wiz", "wsc", "wsf", "wsh" | Select-Object -Unique
 
         # Your MSP's information for alerting and support info for end-user notifications
                 
-            $MSPAlertAddress = "Security@umbrellaitgroup.com"
+            $MSPAlertAddress = "mailalerts@vvsonic.com"
                         
-            $MSPSupportMail = "Support@Umbrellaitgroup.com"
+            $MSPSupportMail = "help@vvsonic.com"
 
-            $MSPSupportInfo = "Umbrella IT Group (904) 930-4261"
+            $MSPSupportInfo = "Sonic Systems Inc (760) 628-0180"
 
         # Other Variables
 
             $MessageColor = "Green"
             $AssesmentColor = "Yellow"
-            $ErrorColor = 'Red'
+            $ErrorColor = "Red"
             # $AllowedForwardingGroup =  Read-Host "Enter the GUID of the SECURITY GROUP ** IN " QUOTES ** which will allow forwarding to external receipients. (MUST BE ACTIVE IN AAD)"
             # Allowed Forwarding by security groups doesn't work well in practice due to Microsoft. No fix available yet.
 
@@ -89,7 +89,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Write-Host
         Write-Host
 
-        $CusAdminAddress = $Cred.UserName
+        #$CusAdminAddress = $Cred.UserName
 
         if ($null -eq $CusAdminAddress) {
             Write-Host
@@ -193,7 +193,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
             'Name'                                   = "Bypass Malware Filter (for Admin)";
             'AdminDisplayName'                       = "Bypass Malware Filter Policy/Rule for Admin";
             'CustomAlertText'                        = "Malware was received and blocked from being delivered. Review the email received in https://protection.office.com/threatreview";
-            'Action'                                 = "DeleteAttachmentAndUseCustomAlertText";
+            #'Action'                                 = "DeleteAttachmentAndUseCustomAlertText";
             'InternalSenderAdminAddress'             = $CusAdminAddress;
             'EnableInternalSenderAdminNotifications' = $True;
             'ZapEnabled'                             = $False;
@@ -238,10 +238,10 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
     Write-Host
     Write-Host 
-    Write-Host -foregroundcolor $MessageColor "Modifying the 'Office365 AntiPhish Default' policy with Anti-Phish Baseline Policy AntiPhish Policy [v1.2]"
+    Write-Host -foregroundcolor $MessageColor "Modifying the 'Office365 AntiPhish Default' policy with Anti-Phish Baseline Policy AntiPhish Policy [v2.0]"
 
         $PhishPolicyParam = @{
-            'AdminDisplayName'                    = "AntiPhish Policy [v1.2] Imported via PS";
+            'AdminDisplayName'                    = "AntiPhish Policy [v2.0] Imported via PS";
             'Enabled'                             = $true;
             'AuthenticationFailAction'            = 'MoveToJmf';
             'EnableMailboxIntelligence'           = $true;
@@ -281,17 +281,17 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Get-AntiPhishRule | Remove-AntiPhishRule
 
     Write-Host
-    Write-Host -foregroundcolor $MessageColor "AntiPhish Policy [v1.2] has been successfully configured"
+    Write-Host -foregroundcolor $MessageColor "AntiPhish Policy [v2.0] has been successfully configured"
 
 
 #################################################
 ## Anti-Spam (Hosted Content Filter)
 #################################################
-    Write-Host -foregroundcolor $MessageColor "Setting up the new Default Inbound Anti-Spam Policy [v1.2]"
+    Write-Host -foregroundcolor $MessageColor "Setting up the new Default Inbound Anti-Spam Policy [v2.0]"
 
         $HostedContentPolicyParam = @{
             'AddXHeaderValue'                      = "M365 ATP Analysis: ";
-            'AdminDisplayName'                     = "Inbound Anti-Spam Policy [v1.2] configured via M365 PS Scripting Tools";
+            'AdminDisplayName'                     = "Inbound Anti-Spam Policy [v2.0] configured via M365 PS Scripting Tools";
             'AllowedSenders'                       = @{add = $ExcludedSenders };
             'AllowedSenderDomains'                 = @{add = $ExcludedDomains };
             # 'BlockedSenders'                       = @{add= $BlacklistedSpamSenders};
@@ -333,10 +333,10 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Set-HostedContentFilterPolicy Default @HostedContentPolicyParam -MakeDefault
 
     Write-Host 
-    Write-Host -foregroundcolor $MessageColor " Inbound Anti-Spam Policy [v1.2] is deployed and set as Default."
+    Write-Host -foregroundcolor $MessageColor " Inbound Anti-Spam Policy [v2.0] is deployed and set as Default."
     Write-Host 
 
-    $Answer2 = Read-Host "Do you want to DISABLE (not delete) custom anti-spam rules, so that only Anti-Spam Policy [v1.2] Apply? This is recommended unless you have other custom rules in use. Type Y or N and press Enter to continue"
+    $Answer2 = Read-Host "Do you want to DISABLE (not delete) custom anti-spam rules, so that only Anti-Spam Policy [v2.0] Apply? This is recommended unless you have other custom rules in use. Type Y or N and press Enter to continue"
     if ($Answer2 -eq 'y' -or $Answer2 -eq 'yes') {
 
         Get-HostedContentFilterRule | Disable-HostedContentFilterRule
@@ -344,7 +344,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Write-Host
         Write-Host -ForegroundColor $AssesmentColor "All custom anti-spam rules have been disabled; they have not been deleted"
         Write-Host 
-        Write-Host -foregroundcolor $MessageColor " Anti-Spam Policy [v1.2] is set as Default and is the only enforcing Imbound Rule."
+        Write-Host -foregroundcolor $MessageColor " Anti-Spam Policy [v2.0] is set as Default and is the only enforcing Imbound Rule."
     }
     else {
         Write-Host 
@@ -380,7 +380,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
         $AdminIndoundContentPolicyParam = @{
             'Name'                                 = "Unrestricted Content Filter Policy for Admin"
-            'AdminDisplayName'                     = "Inbound ADMIN Policy [v1.2] configured via M365 PS Scripting Tools";
+            'AdminDisplayName'                     = "Inbound ADMIN Policy [v2.0] configured via M365 PS Scripting Tools";
             'AddXHeaderValue'                      = "Unrestricted-Admin-Mail: ";
             'RedirectToRecipients'                 = $MSPAlertAddress;
             'DownloadLink'                         = $false;
@@ -416,7 +416,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
         $AdminIndoundContentRuleParam = @{
             'Name'                      = "Unrestricted Content Filter Rule for Admin"
-            'Comments'                  = "Inbound ADMIN Rule [v1.2] configured via M365 PS Scripting Tools";
+            'Comments'                  = "Inbound ADMIN Rule [v2.0] configured via M365 PS Scripting Tools";
             'HostedContentFilterPolicy' = "Unrestricted Content Filter Policy for Admin";
             'Enabled'                   = $true;
             'Confirm'                   = $false;
@@ -429,7 +429,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Write-Host -foregroundcolor $MessageColor "Successfully Set up Policy + Rule for Admin"
 
         $OutboundPolicyDefault = @{
-            'AdminDisplayName'                          = "Outbound Anti-Spam Policy [v1.2] configured via M365 PS Scripting Tools";
+            'AdminDisplayName'                          = "Outbound Anti-Spam Policy [v2.0] configured via M365 PS Scripting Tools";
             'AutoForwardingMode'                        = "Off";
             'RecipientLimitExternalPerHour'             = 100;
             'RecipientLimitInternalPerHour'             = 100;
@@ -442,13 +442,13 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
     Write-Host    
     Write-Host
-    Write-Host -ForegroundColor $MessageColor "The admin forwarding and default outbound spam filter have been set to Outbound Anti-Spam Policy [v1.2]"
+    Write-Host -ForegroundColor $MessageColor "The admin forwarding and default outbound spam filter have been set to Outbound Anti-Spam Policy [v2.0]"
    
 
 #################################################
 ## Safe-Attachments
 #################################################
-    Write-Host -foregroundcolor $MessageColor "Creating the new Safe Attachments [v1.2] Policy..."
+    Write-Host -foregroundcolor $MessageColor "Creating the new Safe Attachments [v2.0] Policy..."
     Write-Host	
     Write-Host -foregroundcolor $AssesmentColor "In order to properly set up the new policies, you must remove the old ones."
 
@@ -475,9 +475,9 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         New-SafeAttachmentRule @SafeAttachmentRuleParamAdmin
 
         $SafeAttachmentPolicyParam = @{
-            'Name'             = "Safe Attachments Policy [v1.2]";
-            'AdminDisplayName' = "Safe Attachments Policy [v1.2] configured via M365 PS Scripting Tools";
-            'Action'           = "DynamicDelivery";
+            'Name'             = "Safe Attachments Policy [v2.0]";
+            'AdminDisplayName' = "Safe Attachments Policy [v2.0] configured via M365 PS Scripting Tools";
+            'Action'           = "Replace";
             ## Action options = Block | Replace | Allow | DynamicDelivery
             'Redirect'         = $true;
             'RedirectAddress'  = $CusAdminAddress;
@@ -488,9 +488,9 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         New-SafeAttachmentPolicy @SafeAttachmentPolicyParam
 
         $SafeAttachRuleParam = @{
-            'Name'                 = "Safe Attachments Rule [v1.2]";
-            'SafeAttachmentPolicy' = "Safe Attachments Policy [v1.2]";
-            'Comments'             = "Safe Attachments Rule [v1.2] configured via M365 PS Scripting Tools";
+            'Name'                 = "Safe Attachments Rule [v2.0]";
+            'SafeAttachmentPolicy' = "Safe Attachments Policy [v2.0]";
+            'Comments'             = "Safe Attachments Rule [v2.0] configured via M365 PS Scripting Tools";
             'RecipientDomainIs'    = $RecipientDomains;
             'ExceptIfSentTo'       = $CusAdminAddress;
             #   'ExceptIfRecipientDomainIs' = $ExcludedDomains;
@@ -500,14 +500,14 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         New-SafeAttachmentRule @SafeAttachRuleParam
 
     Write-Host 
-    Write-Host -foregroundcolor $MessageColor "The new Safe Attachments Policies and rules [v1.2] are deployed."
+    Write-Host -foregroundcolor $MessageColor "The new Safe Attachments Policies and rules [v2.0] are deployed."
     Write-Host 
 
 
 #################################################
 ## Safe-Links
 #################################################
-    Write-Host -foregroundcolor $MessageColor "Creating new policies for Safe-Links [v1.2]"
+    Write-Host -foregroundcolor $MessageColor "Creating new policies for Safe-Links [v2.0]"
     Write-Host
     Write-Host
     Write-Host -foregroundcolor $AssesmentColor "In order to properly set up the new policies, you must remove the old ones."
@@ -528,11 +528,11 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
     write-host -foregroundcolor $MessageColor "Global Default Safe Links policy has been set."
     Write-Host
-    Write-Host -foregroundcolor $MessageColor "Creating new policy: ' Safe Links Policy [v1.2]'"
+    Write-Host -foregroundcolor $MessageColor "Creating new policy: ' Safe Links Policy [v2.0]'"
 
         $SafeLinksPolicyParamAdmin = @{
             'Name'                       = "Bypass Safelinks for Admin";
-            'AdminDisplayName'           = "Bypass Safe Links Policy [v1.2] configured via M365 PS Scripting Tools";
+            'AdminDisplayName'           = "Bypass Safe Links Policy [v2.0] configured via M365 PS Scripting Tools";
             'ScanUrls'                   = $false;
             'DeliverMessageAfterScan'    = $False;
             'EnableForInternalSenders'   = $False;
@@ -544,7 +544,7 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
         $SafeLinksRuleParamAdmin = @{
             'Name'            = "Bypass Safelinks for Admin";
-            'Comments'        = "Bypass Safe Links Policy [v1.2] configured via M365 PS Scripting Tools";
+            'Comments'        = "Bypass Safe Links Policy [v2.0] configured via M365 PS Scripting Tools";
             'SafeLinksPolicy' = "Bypass Safelinks for Admin";
             'SentTo'          = $CusAdminAddress;
             'Enabled'         = $true;
@@ -553,8 +553,8 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         New-SafeLinksRule @SafeLinksRuleParamAdmin
 
         $SafeLinksPolicyParam = @{
-            'Name'                       = "Safe Links Policy [v1.2]";
-            'AdminDisplayName'           = "Safe Links Policy [v1.2] configured via M365 PS Scripting Tools";
+            'Name'                       = "Safe Links Policy [v2.0]";
+            'AdminDisplayName'           = "Safe Links Policy [v2.0] configured via M365 PS Scripting Tools";
             'CustomNotificationText'     = "Only click on links from people you trust!"
             'EnableSafeLinksForTeams'    = $true;
             'EnableSafeLinksForEmail'    = $true;
@@ -570,9 +570,9 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         New-SafeLinksPolicy @SafeLinksPolicyParam 
 
         $SafeLinksRuleParam = @{
-            'Name'              = "Safe Links Rule [v1.2]";
-            'Comments'          = "Safe Links Rule [v1.2] configured via M365 PS Scripting Tools";
-            'SafeLinksPolicy'   = "Safe Links Policy [v1.2]";
+            'Name'              = "Safe Links Rule [v2.0]";
+            'Comments'          = "Safe Links Rule [v2.0] configured via M365 PS Scripting Tools";
+            'SafeLinksPolicy'   = "Safe Links Policy [v2.0]";
             'RecipientDomainIs' = $RecipientDomains;
             'ExceptIfSentTo'    = $CusAdminAddress;
             #  'ExceptIfRecipientDomainIs' = $ExcludedDomains;
@@ -581,18 +581,18 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         }
         New-SafeLinksRule @SafeLinksRuleParam
 
-    Write-Host -foregroundcolor $MessageColor "Safe Links Global Defaults, Policies and Rules [v1.2] has been successfully configured"
+    Write-Host -foregroundcolor $MessageColor "Safe Links Global Defaults, Policies and Rules [v2.0] has been successfully configured"
 }
 
 
     # For some reason, this one policy fails to apply even though it's configured just fine. Try/Catch apparently makes powershell happy.
         Try {
-            Get-SafeAttachmentRule "Safe Attachments Rule [v1.2]"
+            Get-SafeAttachmentRule "Safe Attachments Rule [v2.0]"
         } Catch {
-            New-SafeAttachmentRule -Name "Safe Attachments Rule [v1.2]" -SafeAttachmentPolicy "Safe Attachments Policy [v1.2]" -Comments "Safe Attachments Rule [v1.2] configured via M365 PS Scripting Tools" -RecipientDomainIs $RecipientDomains -ExceptIfSentTo $CusAdminAddress -Enabled $true -Priority 1
+            New-SafeAttachmentRule -Name "Safe Attachments Rule [v2.0]" -SafeAttachmentPolicy "Safe Attachments Policy [v2.0]" -Comments "Safe Attachments Rule [v2.0] configured via M365 PS Scripting Tools" -RecipientDomainIs $RecipientDomains -ExceptIfSentTo $CusAdminAddress -Enabled $true -Priority 1
         }
 
 Write-Host
 Write-Host
-Write-Host -ForegroundColor $MessageColor "This concludes the script for [v1.2] ATP Master Configs"
+Write-Host -ForegroundColor $MessageColor "This concludes the script for [v2.0] ATP Master Configs"
 
